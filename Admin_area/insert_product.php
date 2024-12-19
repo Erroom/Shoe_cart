@@ -21,58 +21,15 @@ if (isset($_POST['insert_product'])) {
   $temp_image1 = $_FILES['product_image1']['tmp_name'];
   $temp_image2 = $_FILES['product_image2']['tmp_name'];
   $temp_image3 = $_FILES['product_image3']['tmp_name'];
-  echo "<pre>";
-  print_r($_FILES);
-  echo "</pre>";
-  //checking empty condition
-  try {
-
-    // Check if any required fields are empty
-
-    if (
-
-        $product_title == '' || $product_description == '' || $product_keywords == '' || $product_category == '' ||
-
-        $product_brands == '' || $product_price == '' || $product_image1 == '' || $product_image2 == '' || $product_image3 == ''
-
-    ) {
-
-        throw new Exception('Please fill all the available fields');
-
-    }
-
-
-    // Attempt to move uploaded files
-    echo "<script>alert('" . $temp_image1 . "');</script>";
-    if (
-
-      !move_uploaded_file($_FILES['image1']['tmp_name'], "./product_images/$product_image1") ||
-
-      !move_uploaded_file($_FILES['image2']['tmp_name'], "./product_images/$product_image2") ||
-
-      !move_uploaded_file($_FILES['image3']['tmp_name'], "./product_images/$product_image3")
-
-  ) {
-
-      throw new Exception('Error uploading files');
-
+  $fileerror = $file['error'];
+  if($fileerror == 0){
+     $destfile= 'product_images/' .$product_image1;
+     $destfile= 'product_images/' .$product_image2;
+     $destfile= 'product_images/' .$product_image3;
+     move_uploaded_file($temp_image1, $destfile);
+     move_uploaded_file($temp_image2, $destfile);
+     move_uploaded_file($temp_image3, $destfile);
   }
-
-
-    // If everything is successful
-
-    echo "<script>alert('Files uploaded successfully');</script>";
-
-
-} catch (Exception $e) {
-
-    // Catch any exceptions and display the error message
-
-    echo "<script>alert('" . $e->getMessage() . "');</script>";
-
-    exit();
-
-}
   // insert query
   $insert_products = "INSERT INTO products (product_title,product_description,product_keywords,
   category_id,brand_id,product_image1,product_image2,product_image3,product_price,date,status) 
